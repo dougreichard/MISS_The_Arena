@@ -15,14 +15,19 @@ jobs:
              zip -r release.zip . -x ".git/*" ".github/*" ".gitignore"
              echo "##[set-output name=artifact;]$(basename -- $GITHUB_REPOSITORY)"
         id: build_project
+      - name: Bump version and push tag
+        id: reftag
+        uses: anothrNick/github-tag-action@master
+        env:
+             GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Create Release
         id: create_release
         uses: actions/create-release@v1.0.0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: ${{ github.ref }}
-          release_name: Release ${{ github.ref }}
+          tag_name: ${{ steps.build.reftag.new_tag }}
+          release_name: Release ${{ steps.build.reftag.new_tag }}
           draft: false
           prerelease: false
       - name: Upload Release Asset
