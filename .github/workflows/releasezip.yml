@@ -12,7 +12,7 @@ jobs:
       - name: build project # This would actually build your project, using zip for an example artifact
         run: |
              zip -r release.zip . -x ".git/*" ".github/*"
-             echo "##[set-output name=artifact;]${basename $GITUB_REPOSITORY}"
+             echo ${basename $GITUB_REPOSITORY}
       - name: Create Release
         id: create_release
         uses: actions/create-release@v1.0.0
